@@ -1,0 +1,23 @@
+{
+  "name": "futbolike-tv",
+  "version": "1.0.0",
+  "private": true,
+  "description": "App Android para reproducir el canal propio FutboLike usando Firebase y HLS.",
+  "scripts": {
+    "serve": "npx http-server ./www -p 8080 -c-1",
+    "cap:add:android": "npx cap add android",
+    "cap:sync": "npx cap sync android",
+    "cap:open": "npx cap open android",
+    "prepare:hls": "node -e \"require('fs').copyFileSync('node_modules/hls.js/dist/hls.min.js','www/vendor/hls.min.js')\"",
+    "android:cloud": "npx cap add android && node scripts/configure-android.mjs && npx cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/cli": "^7.0.0",
+    "@capacitor/core": "^7.0.0",
+    "hls.js": "^1.6.0"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
