@@ -6,7 +6,6 @@ export const firebaseConfig = {
   storageBucket: "futbolike-e581a.firebasestorage.app",
   messagingSenderId: "363416802560",
   appId: "1:363416802560:web:9342c947cc2d0669fb4fe5"
-  measurementId: "G-P4E417RB36"
 };
 
 // Documento esperado: collection "channels", document "futbolike"
