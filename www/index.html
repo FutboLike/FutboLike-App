@@ -16,7 +16,7 @@
         <div class="brand-panel">
           <div class="broadcast-label"><span></span> FUTBOLIKE TV</div>
           <img id="channelLogo" class="channel-logo hidden" alt="Logo del canal" />
-          <div id="fallbackLogo" class="brand-ball" aria-hidden="true">⚽</div>
+          <img id="fallbackLogo" class="fallback-logo" src="./assets/futbolike-logo.png" alt="Logo FutboLike" />
           <h1 id="channelName">FutboLike</h1>
           <p id="welcomeMessage">Bienvenidos a FutboLike, búscanos en redes sociales</p>
         </div>
@@ -44,6 +44,21 @@
 
           <small id="startupStatus">Conectando con Firebase…</small>
         </div>
+      </div>
+
+      <div id="accessModal" class="access-modal hidden" role="dialog" aria-modal="true" aria-labelledby="accessTitle">
+        <form id="accessForm" class="access-dialog">
+          <div class="lock-icon" aria-hidden="true">🔒</div>
+          <h2 id="accessTitle">Canal protegido</h2>
+          <p id="accessPrompt">Ingresa la clave para ver la transmisión.</p>
+          <label for="accessCodeInput">Clave de acceso</label>
+          <input id="accessCodeInput" type="password" inputmode="numeric" autocomplete="off" placeholder="••••••" />
+          <p id="accessError" class="access-error hidden">La clave ingresada no es correcta.</p>
+          <div class="access-actions">
+            <button id="cancelAccessButton" class="secondary-button" type="button">Cancelar</button>
+            <button id="confirmAccessButton" type="submit">Entrar</button>
+          </div>
+        </form>
       </div>
     </section>
 
