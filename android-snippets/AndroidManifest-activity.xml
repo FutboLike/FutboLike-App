@@ -1,3 +1,0 @@
-<!-- Agrega estos atributos al elemento <activity> de MainActivity -->
-android:screenOrientation="landscape"
-android:configChanges="orientation|screenSize|keyboardHidden|keyboard|locale|uiMode|navigation"
