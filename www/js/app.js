@@ -5,6 +5,7 @@ import { firebaseConfig, channelDocument } from "./firebase-config.js";
 const welcomeScreen = document.querySelector("#welcomeScreen");
 const playerScreen = document.querySelector("#playerScreen");
 const watchButton = document.querySelector("#watchButton");
+const watchButtonLabel = document.querySelector("#watchButtonLabel");
 const retryButton = document.querySelector("#retryButton");
 const startupStatus = document.querySelector("#startupStatus");
 const video = document.querySelector("#videoPlayer");
@@ -92,7 +93,7 @@ function applyVisualConfig(data = {}) {
 
   channelName.textContent = config.channelName;
   welcomeMessage.textContent = config.welcomeMessage;
-  watchButton.textContent = config.buttonText;
+  watchButtonLabel.textContent = config.buttonText;
   loadingText.textContent = `Conectando con ${config.channelName}…`;
   document.title = `${config.channelName} TV`;
   document.documentElement.style.setProperty("--primary-color", config.primaryColor || defaults.primaryColor);
