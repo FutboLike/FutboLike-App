@@ -1,0 +1,8 @@
+{
+  "appId": "com.futbolike.tv",
+  "appName": "FutboLike",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}
