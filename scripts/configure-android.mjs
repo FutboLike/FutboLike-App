@@ -72,4 +72,21 @@ appGradle = appGradle.replace(/dependencies\s*\{/, match => {
 });
 fs.writeFileSync(appGradlePath, appGradle);
 
-console.log('Android configurado: libVLC, horizontal, pantalla encendida, modo inmersivo y compatibilidad HTTP.');
+const launcherIconDensities = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi'];
+for (const density of launcherIconDensities) {
+  const targetDir = `android/app/src/main/res/mipmap-${density}`;
+  const sourceIcon = `android-snippets/launcher-icons/mipmap-${density}/ic_launcher.png`;
+  fs.mkdirSync(targetDir, { recursive: true });
+  for (const oldName of ['ic_launcher.webp', 'ic_launcher_round.webp']) {
+    fs.rmSync(path.join(targetDir, oldName), { force: true });
+  }
+  fs.copyFileSync(sourceIcon, path.join(targetDir, 'ic_launcher.png'));
+  fs.copyFileSync(sourceIcon, path.join(targetDir, 'ic_launcher_round.png'));
+}
+
+// Usa el logo completo también en Android 8+ en lugar del icono adaptativo de Capacitor.
+for (const name of ['ic_launcher.xml', 'ic_launcher_round.xml']) {
+  fs.rmSync(path.join('android/app/src/main/res/mipmap-anydpi-v26', name), { force: true });
+}
+
+console.log('Android configurado: libVLC, icono FutboLike, horizontal, pantalla encendida, modo inmersivo y compatibilidad HTTP.');
