@@ -54,6 +54,25 @@ Contenido recomendado:
 
 Cada vez que cambies `streamUrl`, las apps abiertas recibirán el nuevo enlace.
 
+### Clave para acceder al canal
+
+Para pedir una clave después de pulsar **Ver Canal**, agrega estos campos al documento `channels/futbolike`:
+
+```json
+{
+  "requireAccessCode": true,
+  "accessCode": "CAMBIA-ESTA-CLAVE",
+  "accessTitle": "Canal protegido",
+  "accessPrompt": "Ingresa la clave para ver la transmisión."
+}
+```
+
+Puedes cambiar la clave desde Firebase sin generar otra APK. Para desactivarla, cambia `requireAccessCode` a `false`. Este control evita el acceso casual, pero la clave forma parte de una configuración pública y no sustituye autenticación de usuarios ni enlaces privados firmados.
+
+### Icono de la aplicación
+
+El logo FutboLike incluido en `android-snippets/launcher-icons` se instala automáticamente como icono de inicio al ejecutar `scripts/configure-android.mjs`. Para cambiarlo en el futuro, reemplaza los PNG de esas cinco carpetas conservando sus nombres.
+
 ## 3. Reglas de Firestore
 
 El archivo `firestore.rules` permite lectura pública del canal y escritura solo a usuarios autenticados. Para una primera prueba también puedes editar el documento directamente desde Firebase Console.
