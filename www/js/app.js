@@ -22,6 +22,13 @@ const socialSection = document.querySelector("#socialSection");
 const socialMessage = document.querySelector("#socialMessage");
 const instagramButton = document.querySelector("#instagramButton");
 const facebookButton = document.querySelector("#facebookButton");
+const accessModal = document.querySelector("#accessModal");
+const accessForm = document.querySelector("#accessForm");
+const accessTitle = document.querySelector("#accessTitle");
+const accessPrompt = document.querySelector("#accessPrompt");
+const accessCodeInput = document.querySelector("#accessCodeInput");
+const accessError = document.querySelector("#accessError");
+const cancelAccessButton = document.querySelector("#cancelAccessButton");
 
 let hls = null;
 let wakeLock = null;
@@ -30,6 +37,7 @@ let currentConfig = null;
 let userStarted = false;
 let reconnectTimer = null;
 let lastPlayerError = "";
+let accessGranted = false;
 
 const defaults = {
   channelName: "FutboLike",
@@ -44,7 +52,11 @@ const defaults = {
   instagramUrl: "",
   facebookUrl: "",
   showInstagram: true,
-  showFacebook: true
+  showFacebook: true,
+  requireAccessCode: false,
+  accessCode: "",
+  accessTitle: "Canal protegido",
+  accessPrompt: "Ingresa la clave para ver la transmisión."
 };
 
 function show(element) { element.classList.remove("hidden"); }
@@ -100,6 +112,8 @@ function applyVisualConfig(data = {}) {
   document.documentElement.style.setProperty("--welcome-background", backgroundUrl ? `url("${backgroundUrl.replaceAll('"', '%22')}")` : "none");
 
   socialMessage.textContent = config.socialMessage || defaults.socialMessage;
+  accessTitle.textContent = config.accessTitle || defaults.accessTitle;
+  accessPrompt.textContent = config.accessPrompt || defaults.accessPrompt;
   const showInstagram = config.showInstagram !== false && Boolean(instagramUrl);
   const showFacebook = config.showFacebook !== false && Boolean(facebookUrl);
 
@@ -254,7 +268,9 @@ function loadStream(url, force = false) {
 }
 
 function applyChannelConfig(data) {
+  const previousAccessCode = currentConfig?.accessCode;
   currentConfig = { ...defaults, ...data };
+  if (previousAccessCode !== undefined && previousAccessCode !== currentConfig.accessCode) accessGranted = false;
   applyVisualConfig(currentConfig);
   const online = currentConfig.online !== false;
   liveBadge.textContent = online ? currentConfig.liveText : "FUERA DE LÍNEA";
@@ -290,11 +306,40 @@ function connectFirebase() {
   });
 }
 
-watchButton.addEventListener("click", async () => {
+async function startChannel() {
   userStarted = true; hide(welcomeScreen); show(playerScreen);
   await Promise.allSettled([requestFullscreen(), requestLandscape(), requestWakeLock()]);
   if (currentConfig?.online === false) { showError(currentConfig.offlineMessage); return; }
   loadStream(currentConfig?.streamUrl || "", true);
+}
+
+watchButton.addEventListener("click", () => {
+  const requiresCode = currentConfig?.requireAccessCode === true && String(currentConfig?.accessCode || "").length > 0;
+  if (!requiresCode || accessGranted) {
+    startChannel();
+    return;
+  }
+  accessCodeInput.value = "";
+  hide(accessError);
+  show(accessModal);
+  setTimeout(() => accessCodeInput.focus(), 120);
+});
+
+accessForm.addEventListener("submit", event => {
+  event.preventDefault();
+  if (accessCodeInput.value === String(currentConfig?.accessCode || "")) {
+    accessGranted = true;
+    hide(accessModal);
+    startChannel();
+    return;
+  }
+  show(accessError);
+  accessCodeInput.select();
+});
+
+cancelAccessButton.addEventListener("click", () => {
+  hide(accessModal);
+  accessCodeInput.value = "";
 });
 
 retryButton.addEventListener("click", async () => {
