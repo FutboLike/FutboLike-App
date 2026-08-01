@@ -133,6 +133,16 @@ Este proyecto incluye GitHub Actions. Después de subirlo a un repositorio, abre
 
 Consulta `GUIA-DESDE-ANDROID.md` para las instrucciones completas desde el teléfono.
 
+## 9. Notificaciones push
+
+La aplicación incluye Firebase Cloud Messaging y solicita permiso para mostrar notificaciones en Android 13 o superior. Cada instalación autorizada se suscribe automáticamente al tema:
+
+```text
+futbolike
+```
+
+Puedes enviar notificaciones desde **Firebase Console → Messaging** seleccionando la aplicación Android FutboLike. Para envíos mediante API o Firebase Admin SDK, dirige el mensaje al tema `futbolike`. Al modificar el código o `google-services.json` debes generar una APK nueva.
+
 
 ### Redes sociales dinámicas
 La pantalla de bienvenida incluye botones de Instagram y Facebook. Sus URLs y visibilidad se controlan desde Firestore mediante `instagramUrl`, `facebookUrl`, `showInstagram` y `showFacebook`.
