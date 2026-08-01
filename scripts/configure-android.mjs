@@ -64,7 +64,7 @@ const appGradlePath = 'android/app/build.gradle';
 let appGradle = fs.readFileSync(appGradlePath, 'utf8');
 const nativePlayerDependency = "implementation 'org.videolan.android:libvlc-all:3.6.5'";
 const firebaseDependencies = [
-  'implementation "com.google.firebase:firebase-messaging:$firebaseMessagingVersion"'
+  "implementation 'com.google.firebase:firebase-messaging:24.1.0'"
 ];
 
 // Elimina reproductores nativos anteriores para que el script sea seguro al repetirlo.
