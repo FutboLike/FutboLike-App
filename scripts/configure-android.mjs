@@ -55,22 +55,58 @@ fs.copyFileSync('android-snippets/MainActivity.java', activityPath);
 const playerPluginPath = 'android/app/src/main/java/com/futbolike/tv/NativePlayerPlugin.java';
 fs.copyFileSync('android-snippets/NativePlayerPlugin.java', playerPluginPath);
 
+const notificationTopicsPath = 'android/app/src/main/java/com/futbolike/tv/NotificationTopicsPlugin.java';
+fs.copyFileSync('android-snippets/NotificationTopicsPlugin.java', notificationTopicsPath);
+
+fs.copyFileSync('android-snippets/google-services.json', 'android/app/google-services.json');
+
 const appGradlePath = 'android/app/build.gradle';
 let appGradle = fs.readFileSync(appGradlePath, 'utf8');
 const nativePlayerDependency = "implementation 'org.videolan.android:libvlc-all:3.6.5'";
+const firebaseDependencies = [
+  'implementation "com.google.firebase:firebase-messaging:$firebaseMessagingVersion"'
+];
 
 // Elimina reproductores nativos anteriores para que el script sea seguro al repetirlo.
 appGradle = appGradle.replace(
   /^\s*implementation ['"](?:androidx\.media3:media3-(?:exoplayer|exoplayer-hls|ui)|org\.videolan\.android:libvlc-all):[^'"]+['"]\s*$/gm,
   ''
 );
+appGradle = appGradle.replace(
+  /^\s*implementation\s+(?:platform\()?['"]com\.google\.firebase:firebase-(?:bom|messaging)[^\n]*$/gm,
+  ''
+);
 
 appGradle = appGradle.replace(/dependencies\s*\{/, match => {
-  return appGradle.includes(nativePlayerDependency)
-    ? match
-    : `${match}\n    ${nativePlayerDependency}`;
+  const dependencies = [nativePlayerDependency, ...firebaseDependencies]
+    .filter(dependency => !appGradle.includes(dependency));
+  return dependencies.length ? `${match}\n    ${dependencies.join('\n    ')}` : match;
 });
+
+if (!appGradle.includes("apply plugin: 'com.google.gms.google-services'")) {
+  appGradle += "\napply plugin: 'com.google.gms.google-services'\n";
+}
 fs.writeFileSync(appGradlePath, appGradle);
+
+const rootGradlePath = 'android/build.gradle';
+let rootGradle = fs.readFileSync(rootGradlePath, 'utf8');
+const googleServicesClasspath = "classpath 'com.google.gms:google-services:4.5.0'";
+let foundGoogleServices = false;
+rootGradle = rootGradle.split('\n').filter(line => {
+  if (!line.includes('com.google.gms:google-services:')) return true;
+  if (foundGoogleServices) return false;
+  foundGoogleServices = true;
+  return true;
+}).join('\n');
+if (foundGoogleServices) {
+  rootGradle = rootGradle.replace(
+    /classpath ['"]com\.google\.gms:google-services:[^'"]+['"]/,
+    googleServicesClasspath
+  );
+} else {
+  rootGradle = rootGradle.replace(/dependencies\s*\{/, match => `${match}\n        ${googleServicesClasspath}`);
+}
+fs.writeFileSync(rootGradlePath, rootGradle);
 
 const launcherIconDensities = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi'];
 for (const density of launcherIconDensities) {
@@ -89,4 +125,4 @@ for (const name of ['ic_launcher.xml', 'ic_launcher_round.xml']) {
   fs.rmSync(path.join('android/app/src/main/res/mipmap-anydpi-v26', name), { force: true });
 }
 
-console.log('Android configurado: libVLC, icono FutboLike, horizontal, pantalla encendida, modo inmersivo y compatibilidad HTTP.');
+console.log('Android configurado: libVLC, Firebase Cloud Messaging, icono FutboLike, horizontal y modo inmersivo.');
