@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "363416802560",
+    "project_id": "futbolike-e581a",
+    "storage_bucket": "futbolike-e581a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:363416802560:android:20e20ff34b6bf4a1fb4fe5",
+        "android_client_info": {
+          "package_name": "com.futbolike.tv"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLE175QspdlFuomVTACIO2iP_ZGzAL8XM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -9,6 +9,7 @@ public class MainActivity extends BridgeActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     registerPlugin(NativePlayerPlugin.class);
+    registerPlugin(NotificationTopicsPlugin.class);
     super.onCreate(savedInstanceState);
 
     // Mantiene la pantalla encendida mientras la aplicación está abierta.
