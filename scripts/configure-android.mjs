@@ -9,6 +9,19 @@ if (!manifest.includes('android.permission.INTERNET')) {
   manifest = manifest.replace(/(<manifest[^>]*>)/, '$1\n    <uses-permission android:name="android.permission.INTERNET" />');
 }
 
+if (!manifest.includes('android.software.leanback')) {
+  manifest = manifest.replace(
+    /(<manifest[^>]*>)/,
+    '$1\n    <uses-feature android:name="android.software.leanback" android:required="false" />'
+  );
+}
+if (!manifest.includes('android.hardware.touchscreen')) {
+  manifest = manifest.replace(
+    /(<manifest[^>]*>)/,
+    '$1\n    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />'
+  );
+}
+
 
 // Permite streams HTTP antiguos. Siempre es preferible usar HTTPS.
 manifest = manifest.replace(
@@ -20,6 +33,9 @@ manifest = manifest.replace(
     }
     if (!updated.includes('android:networkSecurityConfig=')) {
       updated += '\n        android:networkSecurityConfig="@xml/network_security_config"';
+    }
+    if (!updated.includes('android:banner=')) {
+      updated += '\n        android:banner="@drawable/tv_banner"';
     }
     return `<application${updated}>`;
   }
@@ -45,6 +61,13 @@ manifest = manifest.replace(
     return updated + end;
   }
 );
+
+if (!manifest.includes('android.intent.category.LEANBACK_LAUNCHER')) {
+  manifest = manifest.replace(
+    '<category android:name="android.intent.category.LAUNCHER" />',
+    '<category android:name="android.intent.category.LAUNCHER" />\n                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />'
+  );
+}
 
 fs.writeFileSync(manifestPath, manifest);
 
@@ -125,4 +148,8 @@ for (const name of ['ic_launcher.xml', 'ic_launcher_round.xml']) {
   fs.rmSync(path.join('android/app/src/main/res/mipmap-anydpi-v26', name), { force: true });
 }
 
-console.log('Android configurado: libVLC, Firebase Cloud Messaging, icono FutboLike, horizontal y modo inmersivo.');
+const tvDrawableDir = 'android/app/src/main/res/drawable-xhdpi';
+fs.mkdirSync(tvDrawableDir, { recursive: true });
+fs.copyFileSync('android-snippets/tv/tv_banner.png', path.join(tvDrawableDir, 'tv_banner.png'));
+
+console.log('Android configurado: teléfono, TV Box y Android TV con libVLC, Firebase y navegación remota.');
