@@ -66,6 +66,33 @@ function nativePlayer() {
   return window.Capacitor?.Plugins?.NativePlayer || null;
 }
 
+async function configurePushNotifications() {
+  const push = window.Capacitor?.Plugins?.PushNotifications;
+  const topics = window.Capacitor?.Plugins?.NotificationTopics;
+  if (!push) return;
+
+  try {
+    let permission = await push.checkPermissions();
+    if (permission.receive === "prompt") permission = await push.requestPermissions();
+    if (permission.receive !== "granted") return;
+
+    await push.addListener("registration", async () => {
+      try { await topics?.subscribe({ topic: "futbolike" }); }
+      catch (error) { console.warn("No se pudo suscribir a FutboLike:", error); }
+    });
+    await push.addListener("registrationError", error => {
+      console.warn("No se pudo registrar el dispositivo para notificaciones:", error);
+    });
+    await push.addListener("pushNotificationActionPerformed", () => {
+      hide(errorOverlay);
+    });
+
+    await push.register();
+  } catch (error) {
+    console.warn("Las notificaciones no están disponibles:", error);
+  }
+}
+
 nativePlayer()?.addListener("playerError", event => {
   lastPlayerError = `libVLC: ${event?.message || "error desconocido"}`;
   showError("La transmisión se interrumpió. Intentaremos reconectar.");
@@ -356,3 +383,4 @@ document.addEventListener("visibilitychange", async () => {
 });
 
 connectFirebase();
+configurePushNotifications();
