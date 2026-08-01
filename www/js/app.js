@@ -66,6 +66,36 @@ function nativePlayer() {
   return window.Capacitor?.Plugins?.NativePlayer || null;
 }
 
+function returnToWelcome() {
+  nativePlayer()?.stop().catch(() => {});
+  destroyPlayer();
+  userStarted = false;
+  hide(playerScreen);
+  hide(errorOverlay);
+  hide(loadingOverlay);
+  show(welcomeScreen);
+  setTimeout(() => watchButton.focus(), 100);
+}
+
+async function configureBackButton() {
+  const appPlugin = window.Capacitor?.Plugins?.App;
+  if (!appPlugin) return;
+  await appPlugin.addListener("backButton", async ({ canGoBack }) => {
+    if (!accessModal.classList.contains("hidden")) {
+      hide(accessModal);
+      accessCodeInput.value = "";
+      watchButton.focus();
+      return;
+    }
+    if (userStarted) {
+      returnToWelcome();
+      return;
+    }
+    if (canGoBack) history.back();
+    else appPlugin.exitApp();
+  });
+}
+
 async function configurePushNotifications() {
   const push = window.Capacitor?.Plugins?.PushNotifications;
   const topics = window.Capacitor?.Plugins?.NotificationTopics;
@@ -303,7 +333,10 @@ function applyChannelConfig(data) {
   liveBadge.textContent = online ? currentConfig.liveText : "FUERA DE LÍNEA";
   startupStatus.textContent = online ? "Canal disponible" : "Canal temporalmente fuera de servicio";
 
-  if (!userStarted) return;
+  if (!userStarted) {
+    setTimeout(() => watchButton.focus(), 100);
+    return;
+  }
   if (!online) {
     destroyPlayer();
     nativePlayer()?.stop().catch(() => {});
@@ -384,3 +417,4 @@ document.addEventListener("visibilitychange", async () => {
 
 connectFirebase();
 configurePushNotifications();
+configureBackButton();
