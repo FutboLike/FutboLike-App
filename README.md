@@ -143,6 +143,12 @@ futbolike
 
 Puedes enviar notificaciones desde **Firebase Console → Messaging** seleccionando la aplicación Android FutboLike. Para envíos mediante API o Firebase Admin SDK, dirige el mensaje al tema `futbolike`. Al modificar el código o `google-services.json` debes generar una APK nueva.
 
+## 10. Android TV y TV Box
+
+La misma APK es compatible con teléfonos, TV Box y Android TV. Incluye `LEANBACK_LAUNCHER`, banner horizontal de 320 × 180 px, declaración de pantalla táctil opcional, navegación mediante control remoto y foco visible. En el reproductor, el botón Atrás vuelve a la bienvenida; desde la bienvenida vuelve a cerrar la aplicación.
+
+Para modificar el banner del televisor, reemplaza `android-snippets/tv/tv_banner.png` conservando el tamaño de 320 × 180 px y el mismo nombre.
+
 
 ### Redes sociales dinámicas
 La pantalla de bienvenida incluye botones de Instagram y Facebook. Sus URLs y visibilidad se controlan desde Firestore mediante `instagramUrl`, `facebookUrl`, `showInstagram` y `showFacebook`.
