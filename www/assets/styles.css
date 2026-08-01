@@ -1,0 +1,403 @@
+:root {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #fff;
+  background: #020711;
+  color-scheme: dark;
+  --primary-color: #22c55e;
+}
+
+* { box-sizing: border-box; }
+html, body, #app { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+body { background: #020711; }
+button { font: inherit; }
+.hidden { display: none !important; }
+
+.screen {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.welcome-screen {
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  padding: clamp(18px, 3.5vw, 46px);
+  background-image:
+    linear-gradient(100deg, rgba(1, 6, 16, .93), rgba(4, 18, 36, .78) 55%, rgba(1, 7, 18, .92)),
+    var(--welcome-background, none),
+    radial-gradient(circle at 50% 110%, rgba(34, 197, 94, .3), transparent 40%),
+    linear-gradient(135deg, #030a16, #08213c 52%, #020711);
+  background-size: cover;
+  background-position: center;
+}
+
+.welcome-screen::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 55% -15% -42%;
+  border: 2px solid rgba(255, 255, 255, .1);
+  border-radius: 50% 50% 0 0;
+  background:
+    linear-gradient(90deg, transparent 49.8%, rgba(255,255,255,.09) 50%, transparent 50.2%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.025) 0 1px, transparent 1px 8%);
+  box-shadow: inset 0 35px 90px rgba(34, 197, 94, .1);
+  transform: perspective(520px) rotateX(62deg);
+  transform-origin: center bottom;
+}
+
+.stadium-glow {
+  position: absolute;
+  z-index: -1;
+  top: -18%;
+  width: 35vw;
+  height: 80%;
+  background: linear-gradient(175deg, rgba(255,255,255,.14), transparent 70%);
+  filter: blur(9px);
+  opacity: .5;
+  pointer-events: none;
+}
+.stadium-glow-left { left: 2%; transform: rotate(12deg); }
+.stadium-glow-right { right: 2%; transform: rotate(-12deg); }
+
+.welcome-card {
+  width: min(1050px, 94vw);
+  min-height: min(520px, 82vh);
+  display: grid;
+  grid-template-columns: 1.15fr .85fr;
+  align-items: stretch;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 34px;
+  background: linear-gradient(120deg, rgba(7, 22, 40, .9), rgba(4, 13, 27, .82));
+  box-shadow: 0 28px 90px rgba(0,0,0,.55), 0 0 60px rgba(34,197,94,.08);
+  backdrop-filter: blur(18px);
+}
+
+.brand-panel,
+.action-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(28px, 4.5vw, 60px);
+}
+
+.brand-panel {
+  position: relative;
+  align-items: flex-start;
+  text-align: left;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(34,197,94,.18), transparent 42%),
+    linear-gradient(145deg, rgba(12,37,63,.75), rgba(5,17,32,.25));
+}
+
+.brand-panel::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 10%;
+  bottom: 10%;
+  width: 1px;
+  background: linear-gradient(transparent, rgba(255,255,255,.19), transparent);
+}
+
+.broadcast-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 20px;
+  padding: 8px 13px;
+  border: 1px solid rgba(34,197,94,.28);
+  border-radius: 999px;
+  color: #a7f3d0;
+  background: rgba(34,197,94,.08);
+  font-size: 12px;
+  font-weight: 850;
+  letter-spacing: .18em;
+}
+.broadcast-label span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  box-shadow: 0 0 12px var(--primary-color);
+  animation: pulse 1.7s ease-in-out infinite;
+}
+
+.channel-logo {
+  display: block;
+  width: min(250px, 42vw);
+  max-height: 145px;
+  object-fit: contain;
+  object-position: left center;
+  margin: 0 0 16px;
+  filter: drop-shadow(0 14px 30px rgba(0,0,0,.35));
+}
+.fallback-logo {
+  display: block;
+  width: min(245px, 42vw);
+  max-height: 145px;
+  margin: 0 0 16px;
+  object-fit: contain;
+  object-position: left center;
+  filter: drop-shadow(0 14px 30px rgba(0,0,0,.35));
+}
+
+h1 {
+  margin: 7px 0 12px;
+  font-size: clamp(42px, 7vw, 76px);
+  line-height: .95;
+  letter-spacing: -.055em;
+  text-shadow: 0 12px 32px rgba(0,0,0,.35);
+}
+.brand-panel > p {
+  max-width: 540px;
+  margin: 8px 0 0;
+  color: rgba(255,255,255,.74);
+  font-size: clamp(17px, 2.1vw, 23px);
+  line-height: 1.45;
+}
+
+.action-panel {
+  align-items: center;
+  text-align: center;
+  background: rgba(1, 8, 18, .28);
+}
+.ready-label {
+  margin: 0 0 16px;
+  color: rgba(255,255,255,.65);
+  font-size: 14px;
+  font-weight: 750;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+#watchButton,
+#retryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  border: 0;
+  border-radius: 18px;
+  padding: 18px 32px;
+  font-weight: 900;
+  font-size: clamp(20px, 2.5vw, 27px);
+  color: #03130a;
+  background: linear-gradient(135deg, #86efac, var(--primary-color));
+  box-shadow: 0 14px 34px rgba(34,197,94,.32), inset 0 1px rgba(255,255,255,.55);
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+#watchButton { width: min(330px, 100%); }
+#watchButton:active,
+#retryButton:active,
+.social-button:active { transform: scale(.975); }
+.play-symbol {
+  width: 0;
+  height: 0;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+  border-left: 14px solid #03130a;
+}
+
+.social-section {
+  width: 100%;
+  margin-top: 30px;
+  padding-top: 25px;
+  border-top: 1px solid rgba(255,255,255,.1);
+}
+.social-section > p {
+  margin: 0 0 14px;
+  color: rgba(255,255,255,.64);
+  font-size: 14px;
+  font-weight: 700;
+}
+.social-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px;
+}
+.social-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-width: 0;
+  padding: 13px 14px;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 14px;
+  color: #fff;
+  background: rgba(255,255,255,.07);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 800;
+  box-shadow: 0 10px 25px rgba(0,0,0,.2);
+}
+.social-button.instagram { background: linear-gradient(135deg, rgba(131,58,180,.9), rgba(253,29,29,.88), rgba(252,176,69,.9)); }
+.social-button.facebook { background: linear-gradient(135deg, #1877f2, #0755b7); }
+.social-button svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+}
+.social-button svg .icon-fill { fill: currentColor; stroke: none; }
+#startupStatus {
+  display: block;
+  margin-top: 18px;
+  color: rgba(255,255,255,.48);
+  font-size: 12px;
+}
+
+.player-screen { background: #000; }
+#videoPlayer {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  background: #000;
+}
+.live-badge {
+  position: absolute;
+  top: max(14px, env(safe-area-inset-top));
+  left: max(16px, env(safe-area-inset-left));
+  z-index: 3;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(185,28,28,.88);
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: .04em;
+  pointer-events: none;
+}
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 18px;
+  padding: 24px;
+  text-align: center;
+  background: rgba(0,0,0,.78);
+}
+.overlay p { margin: 0; font-size: clamp(18px, 3vw, 26px); }
+.spinner {
+  width: 54px;
+  height: 54px;
+  border: 5px solid rgba(255,255,255,.25);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin .85s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse { 50% { opacity: .45; transform: scale(.8); } }
+
+.access-modal {
+  position: absolute;
+  z-index: 20;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(0, 4, 12, .78);
+  backdrop-filter: blur(12px);
+}
+.access-dialog {
+  width: min(440px, 92vw);
+  padding: 30px;
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 25px;
+  background: linear-gradient(145deg, #0b2138, #050e1c);
+  box-shadow: 0 25px 80px rgba(0,0,0,.65), 0 0 50px rgba(34,197,94,.1);
+  text-align: center;
+}
+.lock-icon {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 14px;
+  border-radius: 17px;
+  background: rgba(34,197,94,.12);
+  font-size: 28px;
+}
+.access-dialog h2 { margin: 0; font-size: 28px; }
+.access-dialog > p { margin: 10px 0 20px; color: rgba(255,255,255,.68); line-height: 1.4; }
+.access-dialog label {
+  display: block;
+  margin-bottom: 8px;
+  color: rgba(255,255,255,.65);
+  font-size: 13px;
+  font-weight: 750;
+  text-align: left;
+}
+#accessCodeInput {
+  width: 100%;
+  height: 56px;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 14px;
+  outline: none;
+  padding: 0 18px;
+  color: #fff;
+  background: rgba(0,0,0,.25);
+  font: inherit;
+  font-size: 22px;
+  letter-spacing: .16em;
+}
+#accessCodeInput:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(34,197,94,.12); }
+.access-dialog .access-error {
+  margin: 10px 0 0;
+  color: #fca5a5;
+  font-size: 13px;
+  font-weight: 700;
+}
+.access-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; margin-top: 22px; }
+.access-actions button {
+  border: 0;
+  border-radius: 13px;
+  padding: 13px 16px;
+  color: #03130a;
+  background: linear-gradient(135deg, #86efac, var(--primary-color));
+  font-weight: 850;
+}
+.access-actions .secondary-button {
+  border: 1px solid rgba(255,255,255,.14);
+  color: #fff;
+  background: rgba(255,255,255,.07);
+}
+
+@media (max-width: 760px), (orientation: portrait) {
+  .welcome-screen { padding: 16px; overflow-y: auto; }
+  .welcome-card {
+    width: min(94vw, 560px);
+    min-height: auto;
+    grid-template-columns: 1fr;
+    border-radius: 26px;
+  }
+  .brand-panel,
+  .action-panel { padding: 25px 26px; }
+  .brand-panel { align-items: center; text-align: center; }
+  .brand-panel::after { display: none; }
+  .channel-logo, .fallback-logo { object-position: center; }
+  .brand-panel > p { font-size: 17px; }
+  .action-panel { padding-top: 20px; }
+  .social-section { margin-top: 22px; padding-top: 20px; }
+}
+
+@media (max-height: 540px) and (orientation: landscape) {
+  .welcome-card { min-height: 88vh; }
+  .brand-panel, .action-panel { padding: 22px 34px; }
+  .broadcast-label { margin-bottom: 10px; }
+  .fallback-logo, .channel-logo { max-height: 90px; margin-bottom: 8px; }
+  h1 { font-size: clamp(38px, 7vw, 60px); }
+  .brand-panel > p { font-size: 16px; }
+  .social-section { margin-top: 18px; padding-top: 16px; }
+  #startupStatus { margin-top: 10px; }
+}
