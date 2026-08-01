@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
 
     steps:
       - name: Descargar proyecto
@@ -60,10 +60,13 @@ jobs:
           mkdir -p public
           cp android/app/build/outputs/apk/debug/app-debug.apk public/FutboLike.apk
 
-      - name: Publicar APK en Firebase Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_FUTBOLIKE_E581A }}
-          channelId: live
-          projectId: futbolike-e581a
+
+      - name: Publicar APK en GitHub Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git tag -f latest
+          git push origin latest --force
+          gh release view latest >/dev/null 2>&1 || gh release create latest --title "FutboLike - ultima version" --notes "APK actualizada automaticamente por GitHub Actions." --latest
+          gh release upload latest public/FutboLike.apk --clobber
+          gh release edit latest --latest
